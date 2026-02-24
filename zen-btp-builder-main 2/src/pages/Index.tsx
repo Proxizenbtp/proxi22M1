@@ -10,17 +10,21 @@ import {
   Clock,
   Shield,
   Heart,
-  Briefcase,
   HardHat,
   Building2,
   Wrench,
   ArrowRight,
   ChevronRight,
+  Handshake,
+  Star,
 } from "lucide-react";
 import Layout from "@/components/Layout";
 import SectionCTA from "@/components/SectionCTA";
 import heroBtp from "@/assets/hero-btp.jpg";
 import { useRef } from "react";
+import { useSiteSettings } from "@/components/SiteSettingsProvider";
+import { trackCalendlyClick } from "@/lib/site-insights";
+import SEO from "@/components/SEO";
 
 const stagger = {
   hidden: {},
@@ -29,64 +33,86 @@ const stagger = {
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] as const } },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] as const },
+  },
 };
 
 const scaleIn = {
   hidden: { opacity: 0, scale: 0.9 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as const } },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as const },
+  },
 };
 
-const problems = [
-  "Facturation en retard",
-  "Documents mal classés",
-  "Communication compliquée avec le comptable",
-  "Organisation administrative floue",
-  "Stress lié à la gestion quotidienne",
+const problemPoints = [
+  "Votre priorité, ce sont les chantiers, les clients et les délais.",
+  "Pourtant, l’administratif s’accumule : devis en retard, factures à suivre, documents à classer, échanges à gérer.",
+  "Résultat : charge mentale, perte de temps et stress inutile.",
 ];
 
-const solutions = [
-  { icon: FolderOpen, label: "Organisation administrative", desc: "Structuration et classement de vos documents" },
-  { icon: Calculator, label: "Pré-comptabilité", desc: "Préparation des éléments pour votre comptable" },
-  { icon: ClipboardList, label: "Suivi administratif", desc: "Gestion quotidienne de votre administratif" },
-  { icon: Users, label: "Relation comptable", desc: "Coordination avec votre cabinet comptable" },
-  { icon: FileText, label: "Devis & facturation", desc: "Création et suivi de vos devis et factures" },
+const solutionHighlights = [
+  "Vous gardez le contrôle.",
+  "Je m’occupe du suivi.",
+  "Un cadre fiable, sans pression, pensé pour votre réalité terrain.",
 ];
 
-const offers = [
+const services = [
+  { icon: FileText, label: "Devis et facturation" },
+  { icon: ClipboardList, label: "Suivi administratif régulier" },
+  { icon: FolderOpen, label: "Organisation et classement des documents" },
+  { icon: Users, label: "Relances clients" },
+  { icon: Calculator, label: "Interface avec le cabinet comptable" },
+];
+
+const offersPreview = [
   {
     title: "Essentielle",
-    desc: "Accompagnement administratif de base pour structurer votre activité.",
+    desc: "Pour artisans et petites structures BTP",
     accent: false,
   },
   {
     title: "Confort",
-    desc: "Gestion administrative complète avec suivi régulier et relation comptable optimisée.",
+    desc: "Offre recommandée pour un suivi fluide avec le cabinet comptable",
     accent: true,
   },
   {
     title: "Premium",
-    desc: "Accompagnement global renforcé pour une optimisation administrative complète.",
+    desc: "Pour les TPE/PME du BTP ayant un volume administratif important",
     accent: false,
   },
 ];
 
 const audiences = [
-  { icon: HardHat, label: "Artisans BTP" },
-  { icon: Wrench, label: "TPE bâtiment" },
-  { icon: Building2, label: "PME construction" },
-  { icon: Briefcase, label: "Entrepreneurs indépendants" },
+  {
+    icon: HardHat,
+    label:
+      "Artisans du BTP (peinture, plomberie, électricité, second œuvre…)",
+  },
+  { icon: Building2, label: "TPE et PME du bâtiment" },
+  {
+    icon: Wrench,
+    label:
+      "Cabinets comptables recherchant un partenaire administratif fiable pour leurs clients",
+  },
 ];
 
 const values = [
-  { icon: Shield, label: "Spécialisation BTP", desc: "Expertise dédiée au secteur du bâtiment" },
-  { icon: Heart, label: "Compréhension terrain", desc: "Connaissance réelle de votre quotidien" },
-  { icon: ClipboardList, label: "Méthode structurée", desc: "Organisation claire et méthodique" },
-  { icon: Users, label: "Accompagnement humain", desc: "Un interlocuteur dédié et disponible" },
+  { icon: Shield, label: "Spécialisation BTP" },
+  { icon: Heart, label: "Compréhension concrète du terrain" },
+  { icon: ClipboardList, label: "Méthode structurée et fiable" },
+  { icon: Users, label: "Accompagnement personnalisé" },
+  { icon: Handshake, label: "Relation de confiance" },
 ];
 
 const Index = () => {
   const heroRef = useRef(null);
+  const { settings } = useSiteSettings();
+  const heroImageSrc = settings.heroImageUrl || heroBtp;
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -96,11 +122,14 @@ const Index = () => {
 
   return (
     <Layout>
-      {/* HERO */}
-      <section ref={heroRef} className="relative overflow-hidden min-h-[90vh] flex items-center">
+      <SEO pageId="home" />
+      <section
+        ref={heroRef}
+        className="relative overflow-hidden min-h-[90vh] flex items-center"
+      >
         <motion.div className="absolute inset-0" style={{ y: heroY }}>
           <img
-            src={heroBtp}
+            src={heroImageSrc}
             alt="Chantier BTP professionnel"
             className="w-full h-full object-cover scale-110"
             loading="eager"
@@ -109,7 +138,7 @@ const Index = () => {
         </motion.div>
         <div className="container relative z-10 py-24 md:py-36">
           <motion.div
-            className="max-w-2xl"
+            className="max-w-3xl"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
@@ -121,25 +150,33 @@ const Index = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
             >
-              Spécialiste BTP • Accompagnement sur-mesure
+              Pour artisans, TPE/PME et cabinets comptables
             </motion.span>
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-heading font-extrabold text-primary-foreground leading-[1.1] mb-6">
-              Simplifiez
-              <br />
-              <span className="text-secondary">l'administratif</span>
-              <br />
-              de votre entreprise
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-heading font-extrabold text-primary-foreground leading-[1.1] mb-4">
+              Assistance administrative spécialisée BTP
             </h1>
-            <p className="text-lg md:text-xl text-primary-foreground/80 mb-10 leading-relaxed max-w-lg">
-              ProxiZen BTP accompagne les artisans et entreprises du bâtiment
-              dans leur organisation administrative.
+            <p className="text-xl md:text-2xl text-secondary font-heading font-bold mb-4">
+              Moins de stress. Plus de clarté.
+            </p>
+            <p className="text-lg md:text-xl text-primary-foreground/80 mb-10 leading-relaxed max-w-2xl">
+              Votre métier est sur le terrain. L’administratif ne doit plus être
+              un frein.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg" className="text-base px-8 bg-accent hover:bg-accent/90 text-accent-foreground shadow-lg shadow-accent/25">
-                <Link to="/contact">
-                  Prendre rendez-vous
+              <Button
+                asChild
+                size="lg"
+                className="text-base px-8 bg-accent hover:bg-accent/90 text-accent-foreground shadow-lg shadow-accent/25"
+              >
+                <a
+                  href={settings.calendlyUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => trackCalendlyClick("hero-primary")}
+                >
+                  Parlons de votre situation
                   <ArrowRight className="ml-2" size={18} />
-                </Link>
+                </a>
               </Button>
               <Button
                 asChild
@@ -147,21 +184,29 @@ const Index = () => {
                 variant="ghost"
                 className="text-base px-8 text-primary-foreground hover:bg-primary-foreground/10 border border-primary-foreground/20"
               >
-                <Link to="/accompagnement">Découvrir l'accompagnement</Link>
+                <Link to="/accompagnement">
+                  Contactez-nous pour en discuter simplement.
+                </Link>
               </Button>
             </div>
           </motion.div>
         </div>
 
-        {/* Decorative bottom wave */}
         <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-            <path d="M0 80L1440 80L1440 30C1440 30 1200 0 720 0C240 0 0 30 0 30L0 80Z" fill="hsl(var(--background))" />
+          <svg
+            viewBox="0 0 1440 80"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-full"
+          >
+            <path
+              d="M0 80L1440 80L1440 30C1440 30 1200 0 720 0C240 0 0 30 0 30L0 80Z"
+              fill="hsl(var(--background))"
+            />
           </svg>
         </div>
       </section>
 
-      {/* PROBLEMATIQUES */}
       <section className="section-padding">
         <div className="container">
           <motion.div
@@ -171,23 +216,19 @@ const Index = () => {
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeUp}
           >
-            <span className="text-sm font-semibold text-accent uppercase tracking-widest mb-3 block">
-              Le constat
-            </span>
             <h2 className="text-3xl md:text-5xl font-heading font-bold mb-4 text-balance">
-              Vous manquez de temps
-              <br className="hidden md:block" /> pour l'administratif ?
+              Vous êtes artisan ou dirigeant dans le BTP.
             </h2>
           </motion.div>
 
           <motion.div
-            className="max-w-2xl mx-auto space-y-3 mb-14"
+            className="max-w-4xl mx-auto space-y-3 mb-4"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
             variants={stagger}
           >
-            {problems.map((p, i) => (
+            {problemPoints.map((item, i) => (
               <motion.div
                 key={i}
                 className="flex items-center gap-4 p-5 rounded-2xl bg-card border border-border/60 hover:border-destructive/30 hover:shadow-md transition-all duration-300 group"
@@ -196,28 +237,76 @@ const Index = () => {
                 <div className="w-10 h-10 rounded-xl bg-destructive/10 flex items-center justify-center shrink-0 group-hover:bg-destructive/15 transition-colors">
                   <Clock className="text-destructive" size={18} />
                 </div>
-                <span className="font-medium">{p}</span>
+                <span className="font-medium">{item}</span>
               </motion.div>
             ))}
-          </motion.div>
-
-          <motion.div
-            className="text-center"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-          >
-            <p className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary/10 text-primary font-heading font-semibold text-lg">
-              <ChevronRight size={20} />
-              ProxiZen BTP vous aide à reprendre le contrôle.
-            </p>
           </motion.div>
         </div>
       </section>
 
-      {/* SOLUTIONS */}
       <section className="section-padding bg-card">
+        <div className="container">
+          <motion.div
+            className="text-center mb-12"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeUp}
+          >
+            <h2 className="text-3xl md:text-5xl font-heading font-bold text-balance">
+              La solution ProxiZen BTP
+            </h2>
+          </motion.div>
+
+          <motion.div
+            className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={stagger}
+          >
+            <motion.div
+              className="rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background p-7 md:p-9 shadow-sm"
+              variants={fadeUp}
+            >
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide bg-primary/15 text-primary mb-5">
+                <Star size={14} />
+                Accompagnement clair
+              </span>
+              <p className="text-base md:text-lg leading-relaxed text-foreground">
+                ProxiZen BTP vous accompagne dans la gestion de votre
+                administratif de façon claire, structurée et régulière.
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+              variants={stagger}
+            >
+              {solutionHighlights.map((line, i) => (
+                <motion.div
+                  key={line}
+                  className={`rounded-2xl border border-border/60 bg-background p-5 shadow-sm ${
+                    i === 2 ? "sm:col-span-2" : ""
+                  }`}
+                  variants={scaleIn}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                      <ChevronRight size={16} />
+                    </div>
+                    <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
+                      {line}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="section-padding">
         <div className="container">
           <motion.div
             className="text-center mb-16"
@@ -226,11 +315,8 @@ const Index = () => {
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeUp}
           >
-            <span className="text-sm font-semibold text-accent uppercase tracking-widest mb-3 block">
-              Nos services
-            </span>
-            <h2 className="text-3xl md:text-5xl font-heading font-bold text-balance">
-              Ce que nous faisons pour vous
+            <h2 className="text-3xl md:text-5xl font-heading font-bold">
+              Ce que je prends en charge
             </h2>
           </motion.div>
 
@@ -241,20 +327,17 @@ const Index = () => {
             viewport={{ once: true, margin: "-50px" }}
             variants={stagger}
           >
-            {solutions.map((s, i) => (
+            {services.map((service) => (
               <motion.div
-                key={i}
-                className="group relative flex flex-col items-center text-center p-8 rounded-2xl bg-background border border-border/60 hover:border-primary/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                key={service.label}
+                className="group relative flex flex-col items-center text-center p-8 rounded-2xl bg-card border border-border/60 hover:border-primary/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
                 variants={scaleIn}
               >
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/15 to-accent/10 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-                  <s.icon className="text-primary" size={26} />
+                  <service.icon className="text-primary" size={26} />
                 </div>
-                <span className="font-heading font-bold text-sm mb-2">
-                  {s.label}
-                </span>
-                <span className="text-xs text-muted-foreground leading-relaxed">
-                  {s.desc}
+                <span className="font-heading font-bold text-sm leading-relaxed">
+                  {service.label}
                 </span>
               </motion.div>
             ))}
@@ -262,60 +345,73 @@ const Index = () => {
         </div>
       </section>
 
-      {/* OFFRES APERCU */}
-      <section className="section-padding">
+      <section className="section-padding bg-card">
         <div className="container">
           <motion.div
-            className="text-center mb-16"
+            className="text-center mb-12"
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true }}
             variants={fadeUp}
           >
             <span className="text-sm font-semibold text-accent uppercase tracking-widest mb-3 block">
               Formules
             </span>
-            <h2 className="text-3xl md:text-5xl font-heading font-bold">
+            <h2 className="text-3xl md:text-5xl font-heading font-bold mb-4">
               Nos offres
             </h2>
+            <p className="text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Chaque entreprise ayant des besoins différents, nos
+              accompagnements sont personnalisés, sans forfait unique imposé.
+            </p>
           </motion.div>
 
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto"
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto"
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
+            viewport={{ once: true }}
             variants={stagger}
           >
-            {offers.map((o, i) => (
+            {offersPreview.map((offer) => (
               <motion.div
-                key={i}
-                className={`relative p-8 rounded-2xl flex flex-col transition-all duration-300 hover:-translate-y-1 ${
-                  o.accent
-                    ? "bg-primary text-primary-foreground shadow-2xl shadow-primary/20 scale-[1.03] border-2 border-primary"
-                    : "bg-card border border-border/60 hover:shadow-lg hover:border-primary/30"
+                key={offer.title}
+                className={`relative p-7 rounded-2xl border transition-all duration-300 hover:-translate-y-1 ${
+                  offer.accent
+                    ? "bg-primary text-primary-foreground border-primary shadow-2xl shadow-primary/20"
+                    : "bg-background border-border/60 hover:border-primary/30 hover:shadow-md"
                 }`}
-                variants={fadeUp}
+                variants={scaleIn}
               >
-                {o.accent && (
+                {offer.accent ? (
                   <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-secondary text-secondary-foreground text-xs font-bold uppercase tracking-wider">
-                    Populaire
+                    Recommandée
                   </span>
-                )}
-                <h3 className={`text-xl font-heading font-extrabold mb-3 ${o.accent ? "" : "text-primary"}`}>
-                  {o.title}
+                ) : null}
+                <h3
+                  className={`text-xl font-heading font-extrabold mb-3 ${
+                    offer.accent ? "" : "text-primary"
+                  }`}
+                >
+                  {offer.title}
                 </h3>
-                <p className={`text-sm mb-8 flex-1 leading-relaxed ${o.accent ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
-                  {o.desc}
+                <p
+                  className={`text-sm leading-relaxed mb-7 ${
+                    offer.accent
+                      ? "text-primary-foreground/85"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  {offer.desc}
                 </p>
                 <Button
                   asChild
-                  variant={o.accent ? "secondary" : "outline"}
-                  className="w-full group"
+                  variant={offer.accent ? "secondary" : "outline"}
+                  className="w-full"
                 >
                   <Link to="/offres">
-                    Découvrir
-                    <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={16} />
+                    Voir les offres
+                    <ArrowRight className="ml-2" size={16} />
                   </Link>
                 </Button>
               </motion.div>
@@ -324,7 +420,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* POUR QUI */}
       <section className="section-padding bg-card">
         <div className="container">
           <motion.div
@@ -334,32 +429,29 @@ const Index = () => {
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeUp}
           >
-            <span className="text-sm font-semibold text-accent uppercase tracking-widest mb-3 block">
-              Notre cible
-            </span>
             <h2 className="text-3xl md:text-5xl font-heading font-bold">
-              Pour qui ?
+              À qui s’adresse ProxiZen BTP ?
             </h2>
           </motion.div>
 
           <motion.div
-            className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto"
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
             variants={stagger}
           >
-            {audiences.map((a, i) => (
+            {audiences.map((audience) => (
               <motion.div
-                key={i}
-                className="flex flex-col items-center text-center group"
+                key={audience.label}
+                className="flex flex-col items-center text-center group p-7 rounded-2xl bg-background border border-border/60 hover:border-primary/30 hover:shadow-md transition-all duration-300"
                 variants={scaleIn}
               >
                 <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-primary/15 to-accent/10 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300">
-                  <a.icon className="text-primary" size={32} />
+                  <audience.icon className="text-primary" size={32} />
                 </div>
-                <span className="font-heading font-bold text-sm">
-                  {a.label}
+                <span className="font-heading font-bold text-sm leading-relaxed">
+                  {audience.label}
                 </span>
               </motion.div>
             ))}
@@ -367,7 +459,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* VALEURS */}
       <section className="section-padding">
         <div className="container">
           <motion.div
@@ -377,40 +468,43 @@ const Index = () => {
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeUp}
           >
-            <span className="text-sm font-semibold text-accent uppercase tracking-widest mb-3 block">
-              Nos engagements
-            </span>
             <h2 className="text-3xl md:text-5xl font-heading font-bold">
-              Pourquoi nous faire confiance ?
+              Pourquoi choisir ProxiZen BTP ?
             </h2>
           </motion.div>
 
           <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 max-w-6xl mx-auto"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
             variants={stagger}
           >
-            {values.map((v, i) => (
+            {values.map((value) => (
               <motion.div
-                key={i}
+                key={value.label}
                 className="flex flex-col items-center text-center p-8 rounded-2xl bg-card border border-border/60 hover:border-primary/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
                 variants={scaleIn}
               >
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/15 to-accent/10 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-                  <v.icon className="text-primary" size={26} />
+                  <value.icon className="text-primary" size={26} />
                 </div>
-                <span className="font-heading font-bold mb-2">{v.label}</span>
-                <span className="text-sm text-muted-foreground leading-relaxed">{v.desc}</span>
+                <span className="font-heading font-bold text-sm leading-relaxed">
+                  {value.label}
+                </span>
               </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
 
-      {/* CTA FINAL */}
-      <SectionCTA />
+      <SectionCTA
+        title="Parlons de votre situation"
+        description={`Chaque entreprise est différente.
+Un échange permet de comprendre vos besoins et de vous proposer une solution adaptée.`}
+        buttonText="Contactez-nous pour en discuter simplement."
+        href={settings.calendlyUrl}
+      />
     </Layout>
   );
 };

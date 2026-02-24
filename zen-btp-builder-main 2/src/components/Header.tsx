@@ -3,6 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSiteSettings } from "@/components/SiteSettingsProvider";
+import { trackCalendlyClick } from "@/lib/site-insights";
 
 const navLinks = [
   { label: "Accueil", path: "/" },
@@ -17,6 +19,7 @@ const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const { settings } = useSiteSettings();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -29,16 +32,23 @@ const Header = () => {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
           ? "bg-card/95 backdrop-blur-lg border-b shadow-sm"
-          : "bg-transparent border-b border-transparent"
+          : "bg-card/80 backdrop-blur-md border-b border-border/40"
       }`}
     >
       <div className="container flex items-center justify-between h-16 md:h-20">
-        <Link to="/" className="flex items-center gap-2">
-          <span className={`text-xl md:text-2xl font-heading font-extrabold transition-colors duration-300 ${
-            scrolled ? "text-primary" : "text-primary-foreground"
-          }`}>
-            ProxiZen <span className={scrolled ? "text-accent" : "text-secondary"}>BTP</span>
-          </span>
+        <Link
+          to="/"
+          aria-label="Accueil ProxiZen BTP"
+          className={`flex items-center rounded-xl transition-all duration-300 ${
+            scrolled ? "" : "bg-background/90 backdrop-blur-sm shadow-sm px-2 py-1"
+          }`}
+        >
+          <img
+            src={settings.logoUrl}
+            alt="Logo ProxiZen BTP"
+            className="h-9 md:h-11 w-auto"
+            loading="eager"
+          />
         </Link>
 
         {/* Desktop nav */}
@@ -49,12 +59,10 @@ const Header = () => {
               to={link.path}
               className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
                 location.pathname === link.path
-                  ? scrolled
-                    ? "text-primary bg-primary/10"
-                    : "text-primary-foreground bg-primary-foreground/15"
+                  ? "text-primary bg-primary/10"
                   : scrolled
                     ? "text-foreground/70 hover:text-primary hover:bg-primary/5"
-                    : "text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10"
+                    : "text-foreground/85 hover:text-primary hover:bg-primary/5"
               }`}
             >
               {link.label}
@@ -67,15 +75,20 @@ const Header = () => {
             asChild
             className={scrolled ? "" : "bg-accent hover:bg-accent/90 text-accent-foreground"}
           >
-            <Link to="/contact">Demander un échange</Link>
+            <a
+              href={settings.calendlyUrl}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => trackCalendlyClick("header-desktop")}
+            >
+              Prendre RDV
+            </a>
           </Button>
         </div>
 
         {/* Mobile toggle */}
         <button
-          className={`lg:hidden p-2 rounded-lg transition-colors ${
-            scrolled ? "text-foreground" : "text-primary-foreground"
-          }`}
+          className="lg:hidden p-2 rounded-lg transition-colors text-foreground"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Menu"
         >
@@ -110,9 +123,17 @@ const Header = () => {
               ))}
               <div className="pt-2 px-4">
                 <Button asChild className="w-full">
-                  <Link to="/contact" onClick={() => setMobileOpen(false)}>
-                    Demander un échange
-                  </Link>
+                  <a
+                    href={settings.calendlyUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => {
+                      trackCalendlyClick("header-mobile");
+                      setMobileOpen(false);
+                    }}
+                  >
+                    Prendre RDV
+                  </a>
                 </Button>
               </div>
             </nav>

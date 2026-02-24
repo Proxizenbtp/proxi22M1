@@ -2,18 +2,34 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { useSiteSettings } from "@/components/SiteSettingsProvider";
+import { trackCalendlyClick } from "@/lib/site-insights";
 
 interface SectionCTAProps {
   title?: string;
+  description?: string;
   buttonText?: string;
   to?: string;
+  href?: string;
+  hideButton?: boolean;
 }
 
 const SectionCTA = ({
-  title = "Et si vous gagniez du temps sur votre administratif ?",
-  buttonText = "Planifier un échange gratuit",
+  title,
+  description,
+  buttonText,
   to = "/contact",
+  href,
+  hideButton = false,
 }: SectionCTAProps) => {
+  const { settings } = useSiteSettings();
+  const resolvedTitle = title ?? settings.finalCtaTitle;
+  const resolvedButtonText = buttonText ?? settings.finalCtaButtonText;
+  const shouldTrackCalendly = Boolean(href && href.includes("calendly.com"));
+  const shouldOpenInNewTab = Boolean(
+    href && (href.startsWith("http://") || href.startsWith("https://")),
+  );
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-accent text-primary-foreground section-padding">
       {/* Decorative elements */}
@@ -30,24 +46,53 @@ const SectionCTA = ({
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          {title}
+          {resolvedTitle}
         </motion.h2>
+        {description ? (
+          <motion.p
+            className="text-base md:text-lg text-primary-foreground/85 max-w-3xl mx-auto mb-10 leading-relaxed whitespace-pre-line"
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.12, duration: 0.5 }}
+          >
+            {description}
+          </motion.p>
+        ) : null}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
-          <Button
-            asChild
-            size="lg"
-            className="text-base px-10 bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-lg shadow-primary/20 group"
-          >
-            <Link to={to}>
-              {buttonText}
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
-            </Link>
-          </Button>
+          {hideButton ? null : (
+            <Button
+              asChild
+              size="lg"
+              className="text-base px-10 bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-lg shadow-primary/20 group"
+            >
+              {href ? (
+                <a
+                  href={href}
+                  target={shouldOpenInNewTab ? "_blank" : undefined}
+                  rel={shouldOpenInNewTab ? "noreferrer" : undefined}
+                  onClick={() => {
+                    if (shouldTrackCalendly) {
+                      trackCalendlyClick("section-cta");
+                    }
+                  }}
+                >
+                  {resolvedButtonText}
+                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
+                </a>
+              ) : (
+                <Link to={to}>
+                  {resolvedButtonText}
+                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
+                </Link>
+              )}
+            </Button>
+          )}
         </motion.div>
       </div>
     </section>

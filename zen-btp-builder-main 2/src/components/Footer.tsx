@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
+import { useSiteSettings } from "@/components/SiteSettingsProvider";
+import { trackCalendlyClick } from "@/lib/site-insights";
 
 const Footer = () => {
+  const { settings } = useSiteSettings();
+
   return (
     <footer className="bg-foreground text-background">
       <div className="container py-14 md:py-20">
@@ -46,17 +50,21 @@ const Footer = () => {
             <p className="text-sm text-background/60 mb-4">
               Besoin d'un accompagnement administratif ?
             </p>
-            <Link
-              to="/contact"
+            <a
+              href={settings.calendlyUrl}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => trackCalendlyClick("footer")}
               className="inline-flex items-center gap-1 text-sm font-semibold text-accent hover:text-accent/80 transition-colors"
             >
-              Planifier un échange gratuit →
-            </Link>
+              Prendre RDV →
+            </a>
           </div>
         </div>
 
-        <div className="border-t border-background/10 mt-12 pt-8 text-center text-xs text-background/40">
-          © {new Date().getFullYear()} ProxiZen BTP. Tous droits réservés.
+        <div className="border-t border-background/10 mt-12 pt-8 text-xs text-background/40 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <span>© {new Date().getFullYear()} ProxiZen BTP. Tous droits réservés.</span>
+          <span>Created by Becc&apos;s Studio</span>
         </div>
       </div>
     </footer>
