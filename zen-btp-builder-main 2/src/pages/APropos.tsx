@@ -26,10 +26,12 @@ const APropos = () => (
           <div className="md:col-span-7 md:col-start-4 space-y-5 text-lg leading-relaxed">
             <p>
               Je suis assistante administrative indépendante, spécialisée dans le
-              secteur du bâtiment. J’ai travaillé plusieurs années au sein
-              d’entreprises du bâtiment, au plus près du terrain, notamment dans
-              la peinture, ce qui m’a permis de comprendre les réalités
-              concrètes des artisans.
+              secteur du bâtiment. Depuis plus de 11 ans, je travaille dans
+              l’administration d’une entreprise du BTP, notamment dans la
+              peinture et la rénovation. Au quotidien, je suis les devis,
+              les factures, les fournisseurs et les dossiers de chantier.
+              Cette expérience m’a permis de comprendre les réalités concrètes
+              des artisans et le rythme de leurs entreprises.
             </p>
             <p className="text-muted-foreground">
               ProxiZen BTP n’est pas une assistance administrative généraliste.
