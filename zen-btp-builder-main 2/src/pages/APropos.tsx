@@ -26,7 +26,7 @@ const APropos = () => (
           <div className="md:col-span-7 md:col-start-4 space-y-5 text-lg leading-relaxed">
             <p>
               Je suis assistante administrative indépendante, spécialisée dans le
-              secteur du bâtiment. J’ai 11 ans d’expérience dans des entreprises
+              secteur du bâtiment. J’ai plus de 10 ans d’expérience dans des entreprises
               du BTP, au plus près du terrain, notamment dans la peinture,
               ce qui m’a permis de comprendre les réalités concrètes des artisans.
             </p>
