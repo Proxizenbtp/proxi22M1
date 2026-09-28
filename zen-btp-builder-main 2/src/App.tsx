@@ -1,41 +1,10 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import Accompagnement from "./pages/Accompagnement";
-import Offres from "./pages/Offres";
-import APropos from "./pages/APropos";
-import Contact from "./pages/Contact";
-import FAQ from "./pages/FAQ";
-import NotFound from "./pages/NotFound";
-import ScrollToTop from "./components/ScrollToTop";
-import { SiteSettingsProvider } from "./components/SiteSettingsProvider";
-
-const queryClient = new QueryClient();
-
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <SiteSettingsProvider>
-        <BrowserRouter>
-          <ScrollToTop />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/accompagnement" element={<Accompagnement />} />
-            <Route path="/offres" element={<Offres />} />
-            <Route path="/a-propos" element={<APropos />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </SiteSettingsProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <main style={{minHeight:"100vh",display:"grid",placeItems:"center",padding:"32px 20px",background:"#f4f7f5",fontFamily:"Arial, sans-serif",color:"#173d35"}}>
+    <section style={{maxWidth:620,textAlign:"center",background:"#fff",borderRadius:18,padding:"clamp(32px, 7vw, 70px)",boxShadow:"0 10px 35px rgba(20,57,48,.08)"}}>
+      <div style={{fontSize:20,fontWeight:700,letterSpacing:".03em",marginBottom:32}}>ProxiZen BTP</div>
+      <h1 style={{fontSize:"clamp(30px, 5vw, 44px)",lineHeight:1.15,margin:"0 0 24px"}}>Site temporairement en maintenance</h1>
+      <p style={{fontSize:18,lineHeight:1.65,color:"#475b54",margin:0}}>Nous préparons une nouvelle version de notre site. Merci de votre compréhension et à bientôt.</p>
+    </section>
+  </main>
 );
-
 export default App;
