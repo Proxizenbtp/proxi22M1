@@ -1,508 +1,252 @@
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { motion, useScroll, useTransform } from "framer-motion";
-import {
-  FileText,
-  FolderOpen,
-  Calculator,
-  Users,
-  ClipboardList,
-  Clock,
-  Shield,
-  Heart,
-  HardHat,
-  Building2,
-  Wrench,
-  ArrowRight,
-  ChevronRight,
-  Handshake,
-  Star,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Layout from "@/components/Layout";
 import SectionCTA from "@/components/SectionCTA";
-import heroBtp from "@/assets/hero-btp.jpg";
-import { useRef } from "react";
+import SectionHead from "@/components/SectionHead";
+import chantierGeneve from "@/assets/chantier-geneve.jpg";
 import { useSiteSettings } from "@/components/SiteSettingsProvider";
 import { trackCalendlyClick } from "@/lib/site-insights";
 import SEO from "@/components/SEO";
 
-const stagger = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.08 } },
-};
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] as const },
-  },
-};
-
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.9 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as const },
-  },
-};
-
-const problemPoints = [
-  "Votre priorité, ce sont les chantiers, les clients et les délais.",
-  "Pourtant, l’administratif s’accumule : devis en retard, factures à suivre, documents à classer, échanges à gérer.",
-  "Résultat : charge mentale, perte de temps et stress inutile.",
+const facts = [
+  { k: "Mode de travail", v: "100 % à distance" },
+  { k: "Tarification", v: "Forfait mensuel en CHF" },
+  { k: "Réactivité", v: "Réponse en général dans la journée" },
 ];
 
-const solutionHighlights = [
-  "Vous gardez le contrôle.",
-  "Je m’occupe du suivi.",
-  "Un cadre fiable, sans pression, pensé pour votre réalité terrain.",
+const problemPoints = [
+  {
+    t: "Les offres attendent",
+    d: "Les devis partent en retard ou ne sont jamais relancés. Des chantiers se perdent faute de suivi.",
+  },
+  {
+    t: "Les paiements traînent",
+    d: "Factures émises tard, acomptes oubliés, relances jamais envoyées : la trésorerie en souffre.",
+  },
+  {
+    t: "La fiduciaire relance",
+    d: "Pièces manquantes, documents mal classés : la clôture prend du temps et coûte plus cher.",
+  },
 ];
 
 const services = [
-  { icon: FileText, label: "Devis et facturation" },
-  { icon: ClipboardList, label: "Suivi administratif régulier" },
-  { icon: FolderOpen, label: "Organisation et classement des documents" },
-  { icon: Users, label: "Relances clients" },
-  { icon: Calculator, label: "Interface avec le cabinet comptable" },
+  "Mise en forme des offres et émission des factures (QR-facture)",
+  "Suivi des paiements et relances écrites (email, courrier)",
+  "Suivi des acomptes et situations de travaux",
+  "Organisation et classement des documents",
+  "Préparation et transmission des pièces à votre fiduciaire",
+  "Tableau de bord administratif mensuel",
+];
+
+const steps = [
+  { t: "Premier échange", d: "20 minutes au téléphone. Vous réservez un créneau en ligne, je vous appelle. Gratuit et sans engagement." },
+  { t: "Analyse", d: "Je regarde votre organisation actuelle, vos outils et votre volume." },
+  { t: "Proposition", d: "Un forfait mensuel en CHF, avec un périmètre écrit et précis." },
+  { t: "Suivi", d: "Mise en place, puis un suivi écrit régulier et un point téléphonique mensuel." },
 ];
 
 const offersPreview = [
-  {
-    title: "Essentielle",
-    desc: "Pour artisans et petites structures BTP",
-    accent: false,
-  },
-  {
-    title: "Confort",
-    desc: "Offre recommandée pour un suivi fluide avec le cabinet comptable",
-    accent: true,
-  },
-  {
-    title: "Premium",
-    desc: "Pour les TPE/PME du BTP ayant un volume administratif important",
-    accent: false,
-  },
+  { title: "Facturation", price: "dès CHF 790 / mois", desc: "Offres, factures et classement des documents." },
+  { title: "Facturation & encaissements", price: "dès CHF 1 290 / mois", desc: "En plus : suivi des paiements, des acomptes et des relances." },
+  { title: "Bureau délégué", price: "dès CHF 1 690 / mois", desc: "En plus : gestion administrative avancée et reporting mensuel." },
 ];
 
 const audiences = [
-  {
-    icon: HardHat,
-    label:
-      "Artisans du BTP (peinture, plomberie, électricité, second œuvre…)",
-  },
-  { icon: Building2, label: "TPE et PME du bâtiment" },
-  {
-    icon: Wrench,
-    label:
-      "Cabinets comptables recherchant un partenaire administratif fiable pour leurs clients",
-  },
-];
-
-const values = [
-  { icon: Shield, label: "Spécialisation BTP" },
-  { icon: Heart, label: "Compréhension concrète du terrain" },
-  { icon: ClipboardList, label: "Méthode structurée et fiable" },
-  { icon: Users, label: "Accompagnement personnalisé" },
-  { icon: Handshake, label: "Relation de confiance" },
+  { t: "Artisans du bâtiment", d: "Peinture, sanitaire, électricité, menuiserie, second œuvre." },
+  { t: "TPE et PME de la construction", d: "Genève, Vaud et le reste de la Suisse romande." },
+  { t: "Entreprises du Genevois français", d: "Haute-Savoie et Ain, avec des chantiers des deux côtés de la frontière." },
 ];
 
 const Index = () => {
-  const heroRef = useRef(null);
   const { settings } = useSiteSettings();
-  const heroImageSrc = settings.heroImageUrl || heroBtp;
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const heroImageSrc = settings.heroImageUrl || chantierGeneve;
 
   return (
     <Layout>
       <SEO pageId="home" />
-      <section
-        ref={heroRef}
-        className="relative overflow-hidden min-h-[90vh] flex items-center"
-      >
-        <motion.div className="absolute inset-0" style={{ y: heroY }}>
-          <img
-            src={heroImageSrc}
-            alt="Chantier BTP professionnel"
-            className="w-full h-full object-cover scale-110"
-            loading="eager"
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-foreground/85 via-primary/75 to-primary/50" />
-        </motion.div>
-        <div className="container relative z-10 py-24 md:py-36">
-          <motion.div
-            className="max-w-3xl"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            style={{ opacity: heroOpacity }}
-          >
-            <motion.span
-              className="inline-block px-4 py-1.5 rounded-full bg-accent/20 text-accent-foreground text-sm font-medium mb-6 border border-accent/30"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-            >
-              Pour artisans, TPE/PME et cabinets comptables
-            </motion.span>
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-heading font-extrabold text-primary-foreground leading-[1.1] mb-4">
-              Assistance administrative spécialisée BTP
-            </h1>
-            <p className="text-xl md:text-2xl text-secondary font-heading font-bold mb-4">
-              Moins de stress. Plus de clarté.
-            </p>
-            <p className="text-lg md:text-xl text-primary-foreground/80 mb-10 leading-relaxed max-w-2xl">
-              Votre métier est sur le terrain. L’administratif ne doit plus être
-              un frein.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button
-                asChild
-                size="lg"
-                className="text-base px-8 bg-accent hover:bg-accent/90 text-accent-foreground shadow-lg shadow-accent/25"
-              >
+
+      {/* HERO */}
+      <section className="pt-14 md:pt-20">
+        <div className="container">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-10">
+            <div className="md:col-span-7 flex flex-col">
+              <p className="eyebrow">Assistance administrative · Construction · Suisse romande</p>
+              <h1 className="mt-6 text-[2.6rem] leading-[1.02] sm:text-6xl lg:text-[4.6rem] font-semibold tracking-[-0.035em] text-balance">
+                L’administratif de votre entreprise du bâtiment, tenu avec rigueur.
+              </h1>
+              <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground">
+                Offres, factures, relances de paiement et pièces pour votre
+                fiduciaire. Je m’en occupe à distance, chaque mois, dans un
+                cadre défini par écrit.
+              </p>
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                 <a
                   href={settings.calendlyUrl}
                   target="_blank"
                   rel="noreferrer"
                   onClick={() => trackCalendlyClick("hero-primary")}
+                  className="btn-ink"
                 >
-                  Parlons de votre situation
-                  <ArrowRight className="ml-2" size={18} />
+                  Réserver un appel
+                  <ArrowRight size={16} />
                 </a>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="ghost"
-                className="text-base px-8 text-primary-foreground hover:bg-primary-foreground/10 border border-primary-foreground/20"
-              >
-                <Link to="/accompagnement">
-                  Contactez-nous pour en discuter simplement.
+                <Link to="/offres" className="btn-line">
+                  Voir les offres
                 </Link>
-              </Button>
+              </div>
             </div>
-          </motion.div>
-        </div>
 
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg
-            viewBox="0 0 1440 80"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-full"
-          >
-            <path
-              d="M0 80L1440 80L1440 30C1440 30 1200 0 720 0C240 0 0 30 0 30L0 80Z"
-              fill="hsl(var(--background))"
-            />
-          </svg>
-        </div>
-      </section>
-
-      <section className="section-padding">
-        <div className="container">
-          <motion.div
-            className="text-center mb-16"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeUp}
-          >
-            <h2 className="text-3xl md:text-5xl font-heading font-bold mb-4 text-balance">
-              Vous êtes artisan ou dirigeant dans le BTP.
-            </h2>
-          </motion.div>
-
-          <motion.div
-            className="max-w-4xl mx-auto space-y-3 mb-4"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            variants={stagger}
-          >
-            {problemPoints.map((item, i) => (
-              <motion.div
-                key={i}
-                className="flex items-center gap-4 p-5 rounded-2xl bg-card border border-border/60 hover:border-destructive/30 hover:shadow-md transition-all duration-300 group"
-                variants={fadeUp}
-              >
-                <div className="w-10 h-10 rounded-xl bg-destructive/10 flex items-center justify-center shrink-0 group-hover:bg-destructive/15 transition-colors">
-                  <Clock className="text-destructive" size={18} />
-                </div>
-                <span className="font-medium">{item}</span>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      <section className="section-padding bg-card">
-        <div className="container">
-          <motion.div
-            className="text-center mb-12"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeUp}
-          >
-            <h2 className="text-3xl md:text-5xl font-heading font-bold text-balance">
-              La solution ProxiZen BTP
-            </h2>
-          </motion.div>
-
-          <motion.div
-            className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            variants={stagger}
-          >
-            <motion.div
-              className="rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background p-7 md:p-9 shadow-sm"
-              variants={fadeUp}
-            >
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide bg-primary/15 text-primary mb-5">
-                <Star size={14} />
-                Accompagnement clair
-              </span>
-              <p className="text-base md:text-lg leading-relaxed text-foreground">
-                ProxiZen BTP vous accompagne dans la gestion de votre
-                administratif de façon claire, structurée et régulière.
-              </p>
-            </motion.div>
-
-            <motion.div
-              className="grid grid-cols-1 sm:grid-cols-2 gap-4"
-              variants={stagger}
-            >
-              {solutionHighlights.map((line, i) => (
-                <motion.div
-                  key={line}
-                  className={`rounded-2xl border border-border/60 bg-background p-5 shadow-sm ${
-                    i === 2 ? "sm:col-span-2" : ""
-                  }`}
-                  variants={scaleIn}
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                      <ChevronRight size={16} />
-                    </div>
-                    <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
-                      {line}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      <section className="section-padding">
-        <div className="container">
-          <motion.div
-            className="text-center mb-16"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeUp}
-          >
-            <h2 className="text-3xl md:text-5xl font-heading font-bold">
-              Ce que je prends en charge
-            </h2>
-          </motion.div>
-
-          <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            variants={stagger}
-          >
-            {services.map((service) => (
-              <motion.div
-                key={service.label}
-                className="group relative flex flex-col items-center text-center p-8 rounded-2xl bg-card border border-border/60 hover:border-primary/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-                variants={scaleIn}
-              >
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/15 to-accent/10 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-                  <service.icon className="text-primary" size={26} />
-                </div>
-                <span className="font-heading font-bold text-sm leading-relaxed">
-                  {service.label}
-                </span>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      <section className="section-padding bg-card">
-        <div className="container">
-          <motion.div
-            className="text-center mb-12"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-          >
-            <span className="text-sm font-semibold text-accent uppercase tracking-widest mb-3 block">
-              Formules
-            </span>
-            <h2 className="text-3xl md:text-5xl font-heading font-bold mb-4">
-              Nos offres
-            </h2>
-            <p className="text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Chaque entreprise ayant des besoins différents, nos
-              accompagnements sont personnalisés, sans forfait unique imposé.
-            </p>
-          </motion.div>
-
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={stagger}
-          >
-            {offersPreview.map((offer) => (
-              <motion.div
-                key={offer.title}
-                className={`relative p-7 rounded-2xl border transition-all duration-300 hover:-translate-y-1 ${
-                  offer.accent
-                    ? "bg-primary text-primary-foreground border-primary shadow-2xl shadow-primary/20"
-                    : "bg-background border-border/60 hover:border-primary/30 hover:shadow-md"
-                }`}
-                variants={scaleIn}
-              >
-                {offer.accent ? (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-secondary text-secondary-foreground text-xs font-bold uppercase tracking-wider">
-                    Recommandée
+            <figure className="md:col-span-5">
+              <img
+                src={heroImageSrc}
+                alt="Chantier de rénovation du cinéma Plaza à Genève"
+                className="aspect-[4/3] md:aspect-[4/5] w-full object-cover"
+                loading="eager"
+              />
+              <figcaption className="mt-3 text-xs text-muted-foreground">
+                Vous êtes sur le chantier. Je m’occupe du bureau.
+                {!settings.heroImageUrl && (
+                  <span className="block mt-1">
+                    Photo : <a className="underline" href="https://commons.wikimedia.org/wiki/File:Plaza_en_chantier-Gen%C3%A8ve-07.jpg" target="_blank" rel="noreferrer">MHM55 / Wikimedia Commons</a>, <a className="underline" href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noreferrer">CC BY-SA 4.0</a>.
                   </span>
-                ) : null}
-                <h3
-                  className={`text-xl font-heading font-extrabold mb-3 ${
-                    offer.accent ? "" : "text-primary"
-                  }`}
-                >
-                  {offer.title}
-                </h3>
-                <p
-                  className={`text-sm leading-relaxed mb-7 ${
-                    offer.accent
-                      ? "text-primary-foreground/85"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  {offer.desc}
-                </p>
-                <Button
-                  asChild
-                  variant={offer.accent ? "secondary" : "outline"}
-                  className="w-full"
-                >
-                  <Link to="/offres">
-                    Voir les offres
-                    <ArrowRight className="ml-2" size={16} />
-                  </Link>
-                </Button>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
+                )}
+              </figcaption>
+            </figure>
+          </div>
 
-      <section className="section-padding bg-card">
-        <div className="container">
-          <motion.div
-            className="text-center mb-16"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeUp}
-          >
-            <h2 className="text-3xl md:text-5xl font-heading font-bold">
-              À qui s’adresse ProxiZen BTP ?
-            </h2>
-          </motion.div>
-
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            variants={stagger}
-          >
-            {audiences.map((audience) => (
-              <motion.div
-                key={audience.label}
-                className="flex flex-col items-center text-center group p-7 rounded-2xl bg-background border border-border/60 hover:border-primary/30 hover:shadow-md transition-all duration-300"
-                variants={scaleIn}
+          <dl className="mt-16 grid grid-cols-1 border-t border-foreground sm:grid-cols-3">
+            {facts.map((f, i) => (
+              <div
+                key={f.k}
+                className={`py-6 sm:pr-6 ${i > 0 ? "border-t border-border sm:border-t-0 sm:border-l sm:pl-6" : ""}`}
               >
-                <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-primary/15 to-accent/10 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300">
-                  <audience.icon className="text-primary" size={32} />
-                </div>
-                <span className="font-heading font-bold text-sm leading-relaxed">
-                  {audience.label}
-                </span>
-              </motion.div>
+                <dt className="eyebrow">{f.k}</dt>
+                <dd className="mt-2 text-xl font-medium">{f.v}</dd>
+              </div>
             ))}
-          </motion.div>
+          </dl>
         </div>
       </section>
 
+      {/* 01 CONSTAT */}
       <section className="section-padding">
         <div className="container">
-          <motion.div
-            className="text-center mb-16"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeUp}
-          >
-            <h2 className="text-3xl md:text-5xl font-heading font-bold">
-              Pourquoi choisir ProxiZen BTP ?
-            </h2>
-          </motion.div>
-
-          <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 max-w-6xl mx-auto"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            variants={stagger}
-          >
-            {values.map((value) => (
-              <motion.div
-                key={value.label}
-                className="flex flex-col items-center text-center p-8 rounded-2xl bg-card border border-border/60 hover:border-primary/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
-                variants={scaleIn}
-              >
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/15 to-accent/10 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-                  <value.icon className="text-primary" size={26} />
+          <SectionHead
+            index="01"
+            label="Le constat"
+            title="Votre priorité, ce sont les chantiers. L’administratif, lui, s’accumule."
+          />
+          <div className="grid grid-cols-1 md:grid-cols-12 md:gap-10">
+            <div className="md:col-span-9 md:col-start-4 grid grid-cols-1 gap-px bg-border border border-border sm:grid-cols-3">
+              {problemPoints.map((p) => (
+                <div key={p.t} className="bg-background p-6">
+                  <h3 className="text-lg">{p.t}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{p.d}</p>
                 </div>
-                <span className="font-heading font-bold text-sm leading-relaxed">
-                  {value.label}
-                </span>
-              </motion.div>
-            ))}
-          </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 02 PRESTATIONS */}
+      <section className="section-padding bg-card">
+        <div className="container">
+          <SectionHead
+            index="02"
+            label="Prestations"
+            title="Ce que je prends en charge"
+            intro="Je travaille avec vos outils existants. La comptabilité, les décomptes TVA et les salaires restent chez votre fiduciaire."
+          />
+          <div className="grid grid-cols-1 md:grid-cols-12 md:gap-10">
+            <ol className="md:col-span-9 md:col-start-4 grid grid-cols-1 sm:grid-cols-2 sm:gap-x-10">
+              {services.map((s, i) => (
+                <li key={s} className="flex gap-5 border-t border-border py-5">
+                  <span className="w-6 shrink-0 text-sm tabular-nums text-muted-foreground">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="leading-snug">{s}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      {/* 03 FONCTIONNEMENT */}
+      <section className="section-padding">
+        <div className="container">
+          <SectionHead
+            index="03"
+            label="Fonctionnement"
+            title="Quatre étapes, sans surprise"
+            intro="Tout passe par écrit : email et espace partagé. Rien ne se perd, tout est tracé. Un appel sur rendez-vous quand c’est utile."
+          />
+          <div className="grid grid-cols-1 md:grid-cols-12 md:gap-10">
+            <ol className="md:col-span-9 md:col-start-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {steps.map((s, i) => (
+                <li key={s.t} className="border-t-2 border-primary pt-4">
+                  <span className="text-sm tabular-nums text-muted-foreground">Étape {i + 1}</span>
+                  <h3 className="mt-2 text-lg">{s.t}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.d}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      {/* 04 FORMULES */}
+      <section className="section-padding bg-card">
+        <div className="container">
+          <SectionHead
+            index="04"
+            label="Formules"
+            title="Trois niveaux d’accompagnement"
+            intro="Un forfait fixe chaque mois, en CHF. Le montant exact est fixé après un appel découverte de 20 minutes."
+          />
+          <div className="grid grid-cols-1 md:grid-cols-12 md:gap-10">
+            <div className="md:col-span-9 md:col-start-4">
+              {offersPreview.map((o) => (
+                <Link
+                  key={o.title}
+                  to="/offres"
+                  className="group grid grid-cols-12 items-baseline gap-4 border-t border-border py-6 last:border-b"
+                >
+                  <span className="col-span-12 sm:col-span-5">
+                    <span className="block text-xl font-semibold">{o.title}</span>
+                    <span className="mt-1 block text-sm tabular-nums text-muted-foreground">{o.price}</span>
+                  </span>
+                  <span className="col-span-10 sm:col-span-6 text-muted-foreground">{o.desc}</span>
+                  <ArrowRight size={18} className="col-span-2 sm:col-span-1 justify-self-end transition-transform group-hover:translate-x-1" />
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 05 POUR QUI */}
+      <section className="section-padding">
+        <div className="container">
+          <SectionHead index="05" label="Pour qui" title="À qui s’adresse ProxiZen BTP" />
+          <div className="grid grid-cols-1 md:grid-cols-12 md:gap-10">
+            <div className="md:col-span-9 md:col-start-4 grid grid-cols-1 gap-8 sm:grid-cols-3">
+              {audiences.map((a) => (
+                <div key={a.t}>
+                  <h3 className="text-lg">{a.t}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{a.d}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
       <SectionCTA
-        title="Parlons de votre situation"
-        description={`Chaque entreprise est différente.
-Un échange permet de comprendre vos besoins et de vous proposer une solution adaptée.`}
-        buttonText="Contactez-nous pour en discuter simplement."
+        title="Parlons de votre organisation"
+        description="Un appel de 20 minutes pour comprendre vos besoins et vous dire franchement si je peux vous aider."
+        buttonText="Réserver un appel"
         href={settings.calendlyUrl}
       />
     </Layout>

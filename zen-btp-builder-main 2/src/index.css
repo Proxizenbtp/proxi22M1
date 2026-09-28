@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600&display=swap');
+@import '@fontsource-variable/hanken-grotesk';
 
 @tailwind base;
 @tailwind components;
@@ -6,51 +6,51 @@
 
 @layer base {
   :root {
-    --background: 48 24% 96%;
-    --foreground: 200 10% 15%;
+    /* Palette sobre : papier, encre, un seul bleu-pétrole issu du logo */
+    --background: 45 14% 96%;
+    --foreground: 200 12% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 200 10% 15%;
+    --card-foreground: 200 12% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 200 10% 15%;
+    --popover-foreground: 200 12% 10%;
 
-    --primary: 163 28% 34%;
+    --primary: 192 33% 19%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 40 35% 88%;
-    --secondary-foreground: 200 10% 15%;
+    --secondary: 45 10% 91%;
+    --secondary-foreground: 200 12% 10%;
 
-    --muted: 48 15% 92%;
-    --muted-foreground: 200 5% 45%;
+    --muted: 45 10% 91%;
+    --muted-foreground: 200 5% 38%;
 
-    --accent: 158 22% 48%;
+    --accent: 165 18% 47%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 48 10% 88%;
-    --input: 48 10% 85%;
-    --ring: 163 28% 34%;
+    --border: 45 6% 82%;
+    --input: 45 6% 76%;
+    --ring: 192 33% 19%;
 
-    --radius: 0.75rem;
+    --radius: 0.125rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 163 28% 34%;
+    --sidebar-primary: 192 33% 19%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 158 17% 90%;
-    --sidebar-accent-foreground: 200 10% 15%;
-    --sidebar-border: 48 10% 85%;
-    --sidebar-ring: 163 28% 34%;
+    --sidebar-accent: 45 10% 91%;
+    --sidebar-accent-foreground: 200 12% 10%;
+    --sidebar-border: 45 6% 82%;
+    --sidebar-ring: 192 33% 19%;
 
-    /* Custom tokens */
-    --btp-green: 163 28% 34%;
-    --btp-green-light: 158 17% 58%;
-    --btp-cream: 48 24% 96%;
-    --btp-dark: 200 10% 15%;
-    --btp-warm: 40 20% 92%;
+    --btp-green: 192 33% 19%;
+    --btp-green-light: 165 18% 47%;
+    --btp-cream: 45 14% 96%;
+    --btp-dark: 200 12% 10%;
+    --btp-warm: 45 10% 91%;
     --btp-gold: 40 60% 55%;
   }
 
@@ -82,12 +82,18 @@
     @apply border-border;
   }
 
+  html {
+    font-feature-settings: "ss01", "tnum";
+  }
+
   body {
     @apply bg-background text-foreground font-body antialiased;
+    font-size: 17px;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading font-bold tracking-tight;
+    @apply font-heading font-semibold;
+    letter-spacing: -0.02em;
   }
 }
 
@@ -96,12 +102,26 @@
     @apply py-20 md:py-28;
   }
 
-  .glass-card {
-    @apply bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl shadow-sm;
+  /* Étiquette de section : « 01 — Le constat » */
+  .eyebrow {
+    @apply text-xs font-medium uppercase text-muted-foreground;
+    letter-spacing: 0.14em;
   }
 
-  .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+  .rule-top {
+    @apply border-t border-foreground;
+  }
+
+  .btn-ink {
+    @apply inline-flex items-center justify-center gap-3 bg-primary px-6 py-3.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-foreground;
+  }
+
+  .btn-line {
+    @apply inline-flex items-center justify-center gap-3 border border-foreground px-6 py-3.5 text-sm font-medium text-foreground transition-colors hover:bg-foreground hover:text-background;
+  }
+
+  .link-arrow {
+    @apply inline-flex items-center gap-2 text-sm font-medium underline decoration-1 underline-offset-4 hover:decoration-2;
   }
 }
 

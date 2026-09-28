@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import PageHero from "@/components/PageHero";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Mail, Phone } from "lucide-react";
+import { Mail, CalendarDays, Phone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Layout from "@/components/Layout";
 import { useSiteSettings } from "@/components/SiteSettingsProvider";
@@ -133,53 +133,20 @@ const Contact = () => {
   return (
     <Layout>
       <SEO pageId="contact" />
-      <section className="py-16 md:py-24 bg-primary text-primary-foreground">
-        <div className="container text-center">
-          <motion.h1
-            className="text-3xl md:text-5xl font-heading font-bold mb-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            Contactez-nous
-          </motion.h1>
-          <p className="text-lg text-primary-foreground/85 max-w-2xl mx-auto">
-            Un premier échange gratuit et sans engagement pour parler de vos besoins.
-          </p>
-        </div>
-      </section>
-
-      <section className="py-8 md:py-10 bg-card">
-        <div className="container max-w-5xl">
-          <motion.a
-            href="tel:0699327230"
-            className="block rounded-2xl bg-primary p-6 md:p-8 text-center border border-primary/40 shadow-lg shadow-primary/20 hover:shadow-xl transition-shadow"
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <p className="text-primary-foreground/85 text-sm md:text-base mb-2">
-              Appelez-nous directement
-            </p>
-            <p className="text-white text-3xl md:text-4xl font-heading font-extrabold tracking-wide">
-              06 99 32 72 30
-            </p>
-          </motion.a>
-        </div>
-      </section>
+      <PageHero
+        label="Contact"
+        title="Parlons de votre entreprise."
+        intro="Écrivez-moi ou réservez un appel : je vous appelle à l’heure que vous avez choisie. Le premier échange est gratuit et sans engagement."
+      />
 
       <section className="py-16 md:py-24">
-        <div className="container max-w-5xl">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
+        <div className="container">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16">
             {/* FORM */}
-            <motion.div
-              className="lg:col-span-3"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="bg-card border rounded-xl p-8">
-                <h2 className="text-xl font-heading font-bold mb-6">
-                  Envoyez-nous un message
+            <div className="lg:col-span-3">
+              <div className="border-t border-foreground pt-6">
+                <h2 className="text-2xl mb-8">
+                  Écrire un message
                 </h2>
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -222,14 +189,13 @@ const Contact = () => {
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="phone">Téléphone *</Label>
+                      <Label htmlFor="phone">Téléphone (facultatif)</Label>
                       <Input
                         id="phone"
                         name="phone"
                         type="tel"
-                        required
                         maxLength={20}
-                        placeholder="06 00 00 00 00"
+                        placeholder="+41 79 000 00 00"
                       />
                     </div>
                   </div>
@@ -243,32 +209,27 @@ const Contact = () => {
                       placeholder="Décrivez votre besoin…"
                     />
                   </div>
-                  <Button type="submit" size="lg" className="w-full" disabled={loading}>
+                  <Button type="submit" size="lg" className="w-full h-12 rounded-none" disabled={loading}>
                     {loading ? "Envoi en cours…" : "Envoyer le message"}
                   </Button>
                 </form>
               </div>
-            </motion.div>
+            </div>
 
             {/* INFO */}
-            <motion.div
-              className="lg:col-span-2 space-y-8"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <div className="bg-card border rounded-xl p-6">
-                <h3 className="font-heading font-bold mb-4">Informations</h3>
+            <div className="lg:col-span-2 space-y-10">
+              <div className="border-t border-foreground pt-6">
+                <h3 className="eyebrow mb-6">Coordonnées</h3>
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
                     <Mail className="text-primary mt-1 shrink-0" size={18} />
                     <div>
                       <p className="font-medium text-sm">Email</p>
                       <a
-                        href={`mailto:${settings.contactEmail}`}
+                        href="mailto:contact@proxizenbtp.fr"
                         className="text-sm text-muted-foreground hover:text-primary transition-colors"
                       >
-                        {settings.contactEmail}
+                        contact@proxizenbtp.fr
                       </a>
                     </div>
                   </div>
@@ -277,35 +238,42 @@ const Contact = () => {
                     <div>
                       <p className="font-medium text-sm">Téléphone</p>
                       <a
-                        href="tel:0699327230"
+                        href="tel:+33699327230"
                         className="block text-sm text-muted-foreground hover:text-primary transition-colors"
                       >
-                        0699327230
+                        +33 6 99 32 72 30
                       </a>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Laissez un message, je vous rappelle rapidement.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <CalendarDays className="text-primary mt-1 shrink-0" size={18} />
+                    <div>
+                      <p className="font-medium text-sm">Appel découverte (20 min)</p>
                       <a
                         href={settings.calendlyUrl}
                         target="_blank"
                         rel="noreferrer"
                         onClick={() => trackCalendlyClick("contact-info")}
-                        className="block text-sm text-muted-foreground hover:text-primary transition-colors mt-1"
+                        className="block text-sm text-muted-foreground hover:text-primary transition-colors"
                       >
-                        demander un échange
+                        Réservez un créneau, je vous appelle
                       </a>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-primary/5 border border-primary/20 rounded-xl p-6">
-                <h3 className="font-heading font-bold mb-2 text-primary">
-                  Réponse rapide garantie
-                </h3>
+              <div className="border-t border-border pt-6">
+                <h3 className="text-lg mb-2">Je réponds en général dans la journée.</h3>
                 <p className="text-sm text-muted-foreground">
-                  Nous nous engageons à vous répondre dans les plus brefs
-                  délais. Votre premier échange est gratuit et sans engagement.
+                  Au plus tard sous 48 heures ouvrées. Le premier échange est
+                  gratuit et sans engagement.
                 </p>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>

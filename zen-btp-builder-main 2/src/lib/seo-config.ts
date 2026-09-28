@@ -2,15 +2,15 @@ export const siteConfig = {
   name: "ProxiZen BTP",
   domain: "proxizenbtp.fr",
   url: "https://proxizenbtp.fr",
-  defaultTitle: "ProxiZen BTP - Assistance administrative BTP",
+  defaultTitle: "ProxiZen BTP - Assistance administrative batiment en Suisse romande",
   defaultDescription:
-    "Liberez-vous de l'administratif. ProxiZen BTP structure votre gestion et simplifie votre relation avec votre cabinet comptable.",
-  locale: "fr_FR",
+    "Assistante administrative a distance pour les entreprises du batiment a Geneve, Vaud et en Suisse romande : offres, factures, suivi des paiements et pieces pour votre fiduciaire.",
+  locale: "fr_CH",
   email: "contact@proxizenbtp.fr",
   author: "ProxiZen BTP",
   openGraph: {
     type: "website",
-    locale: "fr_FR",
+    locale: "fr_CH",
     siteName: "ProxiZen BTP",
     images: {
       default: "/og-default.png",
@@ -37,11 +37,11 @@ export const pagesConfig = {
   home: {
     slug: "home",
     path: "/",
-    title: "ProxiZen BTP - Assistance administrative BTP",
+    title: "ProxiZen BTP - Assistance administrative batiment en Suisse romande",
     description:
-      "Liberez-vous de l'administratif. ProxiZen BTP structure votre gestion administrative et simplifie votre relation avec votre cabinet comptable.",
+      "Assistante administrative a distance pour les entreprises du batiment a Geneve, Vaud et en Suisse romande : offres, factures, suivi des paiements et pieces pour votre fiduciaire.",
     keywords:
-      "ProxiZen BTP, proxizen btp, proxizenbtp, assistance administrative BTP, administratif, comptabilite, artisan, TPE, gestion, accompagnement",
+      "ProxiZen BTP, assistante administrative construction Geneve, secretariat batiment Suisse romande, administratif PME Vaud, facturation artisan Geneve, fiduciaire, externalisation administrative",
     ogImage: "/og-home.png",
   },
   accompagnement: {
@@ -49,7 +49,7 @@ export const pagesConfig = {
     path: "/accompagnement",
     title: "Accompagnement sur-mesure - ProxiZen BTP",
     description:
-      "Organisation administrative, devis & facturation, interface avec votre cabinet. Accompagnement personnalise pour artisans et TPE du BTP avec ProxiZen BTP.",
+      "Organisation administrative, offres et factures, suivi des paiements, pieces pour votre fiduciaire. Accompagnement a distance pour les entreprises du batiment en Suisse romande.",
     keywords:
       "ProxiZen BTP, accompagnement BTP, organisation administrative, devis facturation, pre-comptabilite",
     ogImage: "/og-accompagnement.png",
@@ -59,9 +59,19 @@ export const pagesConfig = {
     path: "/offres",
     title: "Nos offres - ProxiZen BTP",
     description:
-      "Decouvrez les formules d'accompagnement administratif ProxiZen BTP pour artisans, TPE et PME du batiment.",
+      "Formules d'accompagnement administratif ProxiZen BTP pour artisans et PME du batiment en Suisse romande. Forfaits mensuels des 790 CHF.",
     keywords:
       "ProxiZen BTP, offres administratif BTP, formules accompagnement, gestion entreprise batiment",
+    ogImage: "/og-accompagnement.png",
+  },
+  kits: {
+    slug: "kits",
+    path: "/kits",
+    title: "Kits Excel BTP - ProxiZen BTP",
+    description:
+      "Kits Excel et guides PDF pour piloter l'administratif BTP : devis, factures, paiements, relances, rentabilite chantier, facturation electronique et suivi chantier.",
+    keywords:
+      "kit excel BTP, gestion administrative BTP, suivi chantier excel, facturation electronique BTP, rentabilite chantier, ProxiZen BTP",
     ogImage: "/og-accompagnement.png",
   },
   apropos: {

@@ -1,13 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { motion, AnimatePresence } from "framer-motion";
 import { useSiteSettings } from "@/components/SiteSettingsProvider";
 import { trackCalendlyClick } from "@/lib/site-insights";
+import Brand from "@/components/Brand";
 
 const navLinks = [
-  { label: "Accueil", path: "/" },
   { label: "Accompagnement", path: "/accompagnement" },
   { label: "Offres", path: "/offres" },
   { label: "À propos", path: "/a-propos" },
@@ -17,129 +15,79 @@ const navLinks = [
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const { settings } = useSiteSettings();
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-card/95 backdrop-blur-lg border-b shadow-sm"
-          : "bg-card/80 backdrop-blur-md border-b border-border/40"
-      }`}
-    >
-      <div className="container flex items-center justify-between h-16 md:h-20">
-        <Link
-          to="/"
-          aria-label="Accueil ProxiZen BTP"
-          className={`flex items-center rounded-xl transition-all duration-300 ${
-            scrolled ? "" : "bg-background/90 backdrop-blur-sm shadow-sm px-2 py-1"
-          }`}
-        >
-          <img
-            src={settings.logoUrl}
-            alt="Logo ProxiZen BTP"
-            className="h-9 md:h-11 w-auto"
-            loading="eager"
-          />
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur border-b border-border">
+      <div className="container flex items-center justify-between h-16 md:h-[72px]">
+        <Link to="/" aria-label="Accueil ProxiZen BTP">
+          <Brand />
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden lg:flex items-center gap-1">
+        <nav className="hidden lg:flex items-center gap-8">
           {navLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path}
-              className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+              className={`text-sm transition-colors ${
                 location.pathname === link.path
-                  ? "text-primary bg-primary/10"
-                  : scrolled
-                    ? "text-foreground/70 hover:text-primary hover:bg-primary/5"
-                    : "text-foreground/85 hover:text-primary hover:bg-primary/5"
+                  ? "text-foreground underline underline-offset-[6px] decoration-1"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {link.label}
             </Link>
           ))}
+          <a
+            href={settings.calendlyUrl}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => trackCalendlyClick("header-desktop")}
+            className="btn-ink !py-2.5 !px-5"
+          >
+            Réserver un appel
+          </a>
         </nav>
 
-        <div className="hidden lg:block">
-          <Button
-            asChild
-            className={scrolled ? "" : "bg-accent hover:bg-accent/90 text-accent-foreground"}
-          >
+        <button
+          className="lg:hidden p-2 -mr-2 text-foreground"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Menu"
+          aria-expanded={mobileOpen}
+        >
+          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </div>
+
+      {mobileOpen && (
+        <div className="lg:hidden border-t border-border bg-background">
+          <nav className="container py-4 flex flex-col">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                onClick={() => setMobileOpen(false)}
+                className="py-3 border-b border-border text-base"
+              >
+                {link.label}
+              </Link>
+            ))}
             <a
               href={settings.calendlyUrl}
               target="_blank"
               rel="noreferrer"
-              onClick={() => trackCalendlyClick("header-desktop")}
+              onClick={() => {
+                trackCalendlyClick("header-mobile");
+                setMobileOpen(false);
+              }}
+              className="btn-ink mt-5"
             >
-              Prendre RDV
+              Réserver un appel
             </a>
-          </Button>
+          </nav>
         </div>
-
-        {/* Mobile toggle */}
-        <button
-          className="lg:hidden p-2 rounded-lg transition-colors text-foreground"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Menu"
-        >
-          {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
-
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            className="lg:hidden bg-card border-b shadow-lg"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <nav className="container py-4 flex flex-col gap-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={() => setMobileOpen(false)}
-                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                    location.pathname === link.path
-                      ? "text-primary bg-primary/10"
-                      : "text-foreground/70 hover:text-primary hover:bg-primary/5"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-              <div className="pt-2 px-4">
-                <Button asChild className="w-full">
-                  <a
-                    href={settings.calendlyUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={() => {
-                      trackCalendlyClick("header-mobile");
-                      setMobileOpen(false);
-                    }}
-                  >
-                    Prendre RDV
-                  </a>
-                </Button>
-              </div>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      )}
     </header>
   );
 };
