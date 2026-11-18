@@ -1,0 +1,10 @@
+<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="robots" content="noindex"><title>Test FormSubmit Proxizen BTP</title><h1>Test technique FormSubmit</h1><button id="test">Déclencher le test d’activation</button><p role="status" id="result"></p><script>
+document.querySelector('#test').addEventListener('click',async()=>{
+const el=document.querySelector('#result');
+try {
+const response=await fetch('https://formsubmit.co/ajax/proxizenbtp@gmail.com',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:'Test technique FormSubmit — Proxizen BTP',_captcha:'false',Message:'Test d’activation. Aucune donnée de prospect.'})});
+const data=await response.json();
+el.textContent=data.message;
+} catch {el.textContent='Échec du test de connexion.';}
+});
+</script></html>
